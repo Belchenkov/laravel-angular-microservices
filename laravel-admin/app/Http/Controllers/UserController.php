@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserCreateRequest;
+use App\Http\Requests\UserUpdateRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -21,28 +23,20 @@ class UserController extends Controller
         return User::find($id);
     }
 
-    public function store(Request $request) : Response
+    public function store(UserCreateRequest $request) : Response
     {
-        $user = User::create([
-            'first_name' => $request->input('first_name'),
-            'last_name' => $request->input('last_name'),
-            'email' => $request->input('email'),
-            'password' => Hash::make($request->input('password'))
+        $user = User::create($request->only('first_name', 'last_name', 'email') + [
+            'password' => Hash::make('12qwasZX')
         ]);
 
         return response($user, Response::HTTP_CREATED);
     }
 
-    public function update(Request $request, int $id) : Response
+    public function update(UserUpdateRequest $request, int $id) : Response
     {
         $user = User::find($id);
 
-        $user->update([
-            'first_name' => $request->input('first_name'),
-            'last_name' => $request->input('last_name'),
-            'email' => $request->input('email'),
-            'password' => Hash::make($request->input('password'))
-        ]);
+        $user->update($request->only('first_name', 'last_name', 'email'));
 
         return response($user, Response::HTTP_ACCEPTED);
     }
