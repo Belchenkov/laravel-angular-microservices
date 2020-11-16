@@ -5,17 +5,16 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UserCreateRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Response;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use function Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function index() : Collection
+    public function index() : LengthAwarePaginator
     {
-        return User::all();
+        return User::paginate();
     }
 
     public function show(int $id) : User
