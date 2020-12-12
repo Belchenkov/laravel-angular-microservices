@@ -6,7 +6,9 @@ use App\Http\Requests\UserCreateRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use function Illuminate\Support\Facades\Hash;
 
@@ -45,5 +47,36 @@ class UserController extends Controller
         User::destroy($id);
 
         return response(null, Response::HTTP_NO_CONTENT);
+    }
+
+    public function user()
+    {
+        return Auth::user();
+    }
+
+    public function updateInfo(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return "User is not Auth!";
+        }
+
+        $user->update($request->only('first_name', 'last_name', 'email'));
+
+        return response($user, Response::HTTP_ACCEPTED);
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return "User is not Auth!";
+        }
+
+        $user->update($request->input('password'));
+
+        return response($user, Response::HTTP_ACCEPTED);
     }
 }
