@@ -75,7 +75,7 @@ class UserController extends Controller
             return "User is not Auth!";
         }
 
-        $user->update($request->input('password'));
+        $user->update($request->only('password'));
 
         return response($user, Response::HTTP_ACCEPTED);
     }
